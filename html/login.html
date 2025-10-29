@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ร้านข้าวหน้าเป็ดจ่าพงศ์ - เข้าสู่ระบบ</title>
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+
+    <div class="login-container">
+    
+        <h2>เข้าสู่ระบบ</h2>
+        
+        <form id="login-form">
+            <div class="input-group">
+                <input type="email" id="login-email" placeholder="Jahpong@KohNganBrunch1" required>
+            </div>
+            
+            <div class="input-group">
+                <input type="password" id="login-password" placeholder="************" required>
+            </div>
+            
+            <button type="submit" id="login-button">เข้าสู่ระบบ</button>
+        </form>
+        
+        <p id="login-error" class="error-message"></p>
+
+    </div>
+
+
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+    apiKey: "AIzaSyD1SI_Y7R6e7pBlM_2gGSBp0fkeem3aSpI",
+    authDomain: "jahpongrestaurant.firebaseapp.com",
+    projectId: "jahpongrestaurant",
+    storageBucket: "jahpongrestaurant.firebasestorage.app",
+    messagingSenderId: "97238013021",
+    appId: "1:97238013021:web:6f613131285f7b6532e9b4",
+    measurementId: "G-TKG07DGYD9"
+    };
+    // สั่งให้ Firebase เริ่มทำงาน
+    firebase.initializeApp(firebaseConfig);
+
+    // สร้างตัวแปรลัดไว้เรียกใช้งาน
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  </script>
+
+  <script src="../scripts/login.js"></script> 
+
+</body>
+</html>

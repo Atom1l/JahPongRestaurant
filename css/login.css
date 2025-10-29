@@ -1,0 +1,63 @@
+/* --- ใช้กับทุกหน้า --- */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* ทำให้เต็มจอ */
+  margin: 0;
+}
+
+/* --- ดีไซน์สำหรับหน้า Login --- */
+.login-container {
+  background: #ffffff;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  width: 350px;
+  text-align: center;
+}
+
+.login-container h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box; /* ป้องกันไม่ให้ input ล้นกรอบ */
+}
+
+#login-button {
+  width: 100%;
+  padding: 14px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #f06a4e; /* สีส้มตาม Mockup */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#login-button:hover {
+  background-color: #d95336; /* สีส้มเข้มขึ้นตอนเอาเมาส์ชี้ */
+}
+
+/* คลาสสำหรับแสดงข้อความ Error */
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
