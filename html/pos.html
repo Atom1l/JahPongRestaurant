@@ -6,7 +6,6 @@
   <title>สั่งอาหาร - ร้านจ่าพงศ์</title>
   
   <link rel="stylesheet" href="../css/pos.css">
-  
   <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
@@ -30,8 +29,9 @@
 
       <div class="menu-header">
         <h2>รายการอาหาร</h2>
-        <div id="cart-icon">
-          🛒 <span id="cart-count">0</span>
+        <div id="cart-icon" style="margin-top: 8px;">
+          <img style="color: #1E1E1E;" width="30px" height="30px" src="/images/carts.png" alt="cart">
+          <span id="cart-count">0</span>
         </div>
       </div>
 
@@ -73,10 +73,12 @@
   <div class="payment-methods">
     <h3>วิธีการชำระเงิน</h3>
     <button class="payment-option selected" data-payment="Cash">
-    <span class="payment-icon">💲</span> เงินสด
+    <span class="payment-icon">
+      <img width="30px" height="30px" src="/images/cash.png" alt="cash"></span> เงินสด
     </button>
     <button class="payment-option" data-payment="QR">
-    <span class="payment-icon">📱</span> OR พร้อมเพย์
+    <span class="payment-icon">
+      <img width="30px" height="30px" src="/images/QR codes.png" alt="QR"></span> OR พร้อมเพย์
     </button>
   </div>
 
@@ -96,7 +98,7 @@
   <h2>สั่งอาหารเรียบร้อย</h2>
 </div>
 
-  <!-- Modal สำหรับแสดงรายละเอียดเมนู -->
+    <!-- Modal สำหรับแสดงรายละเอียดเมนู -->
     <div id="item-modal" class="modal-overlay" style="display: none;">
       <div class="modal-content">
 
@@ -107,10 +109,19 @@
 
       <img src="" alt="รูปอาหาร" id="modal-item-image">
 
-      <p class="modal-price" id="modal-item-price">฿ 0.00</p>
+      <p class="modal-price" id="modal-item-price-display" style="display: none;">฿ 0.00</p>
 
       <label for="modal-notes">รายละเอียดเพิ่มเติม:</label>
       <textarea id="modal-notes" placeholder="เช่น ไม่เอาหนัง, ขอราดน้ำเยอะๆ"></textarea>
+
+      <div id="modal-price-options" style="display: none; margin-bottom: 1rem;">
+        <button id="modal-btn-normal" class="payment-option price-option" data-price="0">
+          ธรรมดา ฿0
+        </button>
+        <button id="modal-btn-special" class="payment-option price-option" data-price="0">
+          พิเศษ ฿0
+        </button>
+      </div>
 
       <div class="modal-actions">
         <button id="add-to-cart-button" class="pos-button">เพิ่มลงตะกร้า</button>

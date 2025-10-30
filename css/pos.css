@@ -95,13 +95,13 @@ body {
 /* สถานะ: กำลังเลือก (Selected) - สีส้ม */
 .table-item.selected {
   border-color: #f06a4e;
-  background-color: #fff8f6;
+  background-color: #f06a4e;
   box-shadow: 0 0 10px rgba(240, 106, 78, 0.3);
 }
 .table-item.selected img {
   /* ไอคอนสีส้ม (เราจะใช้ filter หมุนสี) */
   /* ถ้ามีรูปไอคอนสีส้ม ก็เปลี่ยน src เอาง่ายกว่า */
-  filter: invert(55%) sepia(51%) saturate(1478%) hue-rotate(328deg) brightness(97%) contrast(87%);
+  filter: invert(0%) sepia(50%) saturate(-500%) hue-rotate(328deg) brightness(100%) contrast(60%);
 }
 
 /* ปุ่มกด (ใช้ดีไซน์คล้ายๆ ปุ่ม Login) */
@@ -284,6 +284,18 @@ body {
   text-align: right;
 }
 
+#modal-price-options {
+  display: flex; /* วางปุ่มข้างกัน */
+  gap: 10px; /* เว้นช่องไฟ */
+}
+
+#modal-price-options .price-option {
+  width: 50%; /* แบ่งครึ่งจอ */
+  text-align: center;
+  font-size: 1rem;
+  padding: 12px 5px; /* ปรับ padding ให้พอดี */
+}
+
 /* --- สไตล์หน้า Checkout --- */
 .checkout-header {
   display: flex;
@@ -320,6 +332,19 @@ body {
   padding-bottom: 1rem;
   border-bottom: 1px dashed #eee;
 }
+.checkout-item-image {
+  /* ⭐️ กำหนดขนาดตรงนี้ ⭐️ */
+  width: 50px;
+  height: 50px;
+  
+  /* (ดีไซน์เพิ่มเติม) */
+  border-radius: 8px;     /* ทำให้มุมมน */
+  object-fit: cover;      /* ป้องกันรูปบิดเบี้ยว */
+
+  /* (ส่วนจัดวาง Grid) */
+  grid-column: 1 / 2;
+  grid-row: 1 / 3; /* ให้รูปสูง 2 แถว */
+}
 .checkout-item:last-child {
   margin-bottom: 0;
   padding-bottom: 0;
@@ -331,6 +356,9 @@ body {
   font-weight: 500;
   grid-column: 1 / 2;
   grid-row: 1 / 2;
+  width: 80%;
+  margin-left: 60px;
+  text-align: left;
 }
 .checkout-item .item-price {
   font-size: 1.1rem;
@@ -344,7 +372,9 @@ body {
   color: #777;
   grid-column: 1 / 3; /* กินพื้นที่เต็มแถว */
   grid-row: 2 / 3;
-  padding-left: 10px;
+  width: 80%;
+  margin-left: 60px;
+  text-align: left;
 }
 
 /* สรุปยอด */

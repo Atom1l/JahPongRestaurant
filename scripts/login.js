@@ -34,10 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const user = userCredential.user;
         console.log("ล็อกอินสำเร็จ! User:", user.uid);
         
-        // **นี่คือส่วนสำคัญที่จะทำต่อไป**
-        // เราต้องเช็ก "role" ของ User คนนี้จาก Firestore
-        // แต่ตอนนี้... เราจะส่งไปหน้า pos.html ก่อนเลย
-        window.location.href = "pos.html"; 
+        if (userCredential.user.email === 'kitchen@gmail.com') {
+            // ถ้าเป็น user ครัว
+            window.location.href = 'kds.html'; // ไปหน้า KDS
+        } else {
+            // ถ้าเป็น user อื่น (เช่น หน้าร้าน)
+            window.location.href = 'pos.html'; // ไปหน้า POS
+        }
 
       })
       .catch((error) => {
@@ -54,3 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 });
+
+
+

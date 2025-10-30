@@ -1,0 +1,284 @@
+/* --- Global Styles --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+h2, h3, p {
+    margin: 0;
+}
+
+/* --- Header --- */
+.kds-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.logo-container .logo {
+    height: 50px;
+    width: auto;
+}
+
+/* --- Navigation (แยกลงมาใต้ header) --- */
+.navigation {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.navigation .nav-button {
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 12px 40px;
+    border: none;
+    background-color: #e8e8e8;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #666;
+}
+
+.navigation .nav-button.active {
+    background-color: #e85d47;
+    color: white;
+    box-shadow: 0 2px 8px rgba(232, 93, 71, 0.3);
+}
+
+.navigation .nav-button:hover:not(.active) {
+    background-color: #d8d8d8;
+}
+
+/* --- Page Container --- */
+.kds-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+.kds-page {
+    display: none;
+}
+
+.kds-page.active {
+    display: block;
+}
+
+.kds-page h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 25px;
+    padding-left: 10px;
+}
+
+.order-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* --- Order Card Styling (ปรับให้ใหญ่ตามภาพ) --- */
+.order-card {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    padding: 30px;
+    border: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    min-height: 140px;
+}
+
+.order-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.order-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    object-fit: cover;
+    background-color: #f9f9f9;
+    border: 2px solid #f5f5f5;
+    margin-right: 30px;
+    flex-shrink: 0;
+}
+
+.order-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.order-details h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #222;
+}
+
+.order-details p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+.order-action {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+    margin-left: 30px;
+}
+
+.order-action .price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #222;
+}
+
+.finish-button,
+.done-button {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.finish-button {
+    background-color: #e85d47;
+}
+
+.finish-button:hover {
+    background-color: #d94d3a;
+    box-shadow: 0 4px 12px rgba(232, 93, 71, 0.3);
+}
+
+.done-button {
+    background-color: #999999;
+    color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+/* --- Modal Styling --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 380px;
+}
+
+.modal-content h3 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #222;
+}
+
+.modal-content p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.modal-button {
+    flex: 1;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-button.cancel {
+    background-color: #e8e8e8;
+    color: #333;
+}
+
+.modal-button.cancel:hover {
+    background-color: #d8d8d8;
+}
+
+.modal-button.confirm {
+    background-color: #e85d47;
+    color: white;
+}
+
+.modal-button.confirm:hover {
+    background-color: #d94d3a;
+    box-shadow: 0 4px 12px rgba(232, 93, 71, 0.3);
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    .order-card {
+        padding: 20px;
+    }
+
+    .order-image {
+        width: 90px;
+        height: 90px;
+        margin-right: 20px;
+    }
+
+    .order-details h3 {
+        font-size: 1.2rem;
+    }
+
+    .order-details p {
+        font-size: 0.9rem;
+    }
+
+    .order-action .price {
+        font-size: 1.4rem;
+    }
+
+    .finish-button,
+    .done-button {
+        padding: 10px 24px;
+        font-size: 0.95rem;
+    }
+}
