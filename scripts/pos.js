@@ -1,9 +1,10 @@
 // --- Global Variables ---
-let cart = []; // 👈 ตะกร้าสินค้าของเรา
-let currentSelectedItem = null; // 👈 (เราจะเพิ่ม selectedPrice เข้าไปในนี้)
-let currentTableId = null; // 👈 เก็บ ID ของโต๊ะที่เลือก
-let currentTableNumber = null; // 👈 เก็บ "เลข" โต๊ะที่เลือก
-let selectedPaymentMethod = "Cash"; // 👈 ค่าเริ่มต้นวิธีชำระเงิน
+let cart = [];
+let currentSelectedItem = null;
+let currentTableId = null;
+let currentTableNumber = null;
+let selectedPaymentMethod = "Cash";
+let isEditMode = false; // ⭐️ ตัวแปรสำหรับ "โหมดแก้ไข"
 
 // รอให้หน้าเว็บโหลดเสร็จ
 document.addEventListener("DOMContentLoaded", () => {
@@ -11,18 +12,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- 1. ตรวจสอบว่า User ล็อกอินมารึยัง ---
   auth.onAuthStateChanged((user) => {
     if (user) {
-      // User ล็อกอินอยู่
       console.log("User is logged in:", user.uid);
-      fetchTables(); // เริ่มดึงข้อมูลโต๊ะ
+      fetchTables();
     } else {
-      // User ยังไม่ล็อกอิน ให้เด้งกลับไปหน้า login
       console.log("User is not logged in. Redirecting to login.");
-      // ** แก้ Path ตรงนี้ให้ถูก ถ้า login.html ของคุณไม่ได้ชื่อนี้ **
       window.location.href = "login.html"; 
     }
   });
 
-  // --- 2. ⭐️ (แก้ไข) ดึงองค์ประกอบ HTML (Containers) ---
+  // --- 2. ⭐️ (ฉบับสมบูรณ์) ดึงองค์ประกอบ HTML ---
   const tableSelectionContainer = document.getElementById("table-selection-container");
   const menuContainer = document.getElementById("menu-container");
   const checkoutContainer = document.getElementById("checkout-container");
@@ -31,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // (Table)
   const tableGridContainer = document.getElementById("table-grid-container");
   const selectButton = document.getElementById("select-table-button");
+  const editTablesButton = document.getElementById("edit-tables-button"); // ⭐️ (ปุ่ม Edit)
 
   // (Menu)
   const menuGridContainer = document.getElementById("menu-grid-container");
@@ -46,15 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmOrderButton = document.getElementById("confirm-order-button");
   const paymentOptions = document.querySelectorAll(".payment-option");
 
-  // (Modal)
+  // (Modal - ราคาพิเศษ)
   const itemModal = document.getElementById("item-modal");
   const modalCloseButton = document.getElementById("modal-close-button");
   const addToCartButton = document.getElementById("add-to-cart-button");
   const modalItemName = document.getElementById("modal-item-name");
   const modalItemImage = document.getElementById("modal-item-image");
   const modalNotes = document.getElementById("modal-notes");
-  
-  // ⭐️⭐️ (นี่คือส่วนที่ถูกต้อง) ดึงองค์ประกอบราคาใน Modal ⭐️⭐️
   const modalItemPriceDisplay = document.getElementById("modal-item-price-display");
   const modalPriceOptions = document.getElementById("modal-price-options");
   const modalBtnNormal = document.getElementById("modal-btn-normal");
@@ -75,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // --- 4. ⭐️ (แก้ไข) ฟังก์ชันสร้าง UI โต๊ะ 1 ตัว (แก้ Bug ไอคอน) ---
+  // --- 4. ⭐️ (แก้ไข Bug!) ฟังก์ชันสร้าง UI โต๊ะ 1 ตัว ⭐️ ---
   function createTableElement(docId, tableData) {
     const tableDiv = document.createElement("div");
     tableDiv.className = "table-item";
@@ -93,18 +90,25 @@ document.addEventListener("DOMContentLoaded", () => {
       <input type="radio" name="table_selection" value="${docId}" style="display: none;">
     `;
 
-    // 5. เพิ่ม Event Listener ให้โต๊ะ (เมื่อถูกคลิก)
+    // 5. (อัปเดต) เพิ่ม Event Listener ให้โต๊ะ (เมื่อถูกคลิก)
     tableDiv.addEventListener("click", () => {
-      if (tableData.status === "Occupied") return; 
-
-      document.querySelectorAll('.table-item.selected').forEach(el => {
-        el.classList.remove('selected');
-      });
-      tableDiv.classList.add('selected');
       
-      currentTableId = docId;
-      currentTableNumber = tableData.number;
-      console.log(`Selected table: ${currentTableNumber} (ID: ${currentTableId})`);
+      if (isEditMode) {
+        // --- (ใหม่!) ถ้าอยู่ใน "โหมดแก้ไข" ---
+        handleTableEdit(docId, tableData);
+      } else {
+        // --- (ของเดิม) ถ้าอยู่ใน "โหมดสั่งอาหาร" ---
+        if (tableData.status === "Occupied") return; // คลิกโต๊ะเต็มไม่ได้
+
+        document.querySelectorAll('.table-item.selected').forEach(el => {
+          el.classList.remove('selected');
+        });
+        tableDiv.classList.add('selected');
+        
+        currentTableId = docId;
+        currentTableNumber = tableData.number;
+        console.log(`Selected table: ${currentTableNumber} (ID: ${currentTableId})`);
+      }
     });
     tableGridContainer.appendChild(tableDiv);
   }
@@ -121,7 +125,43 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // --- 7. ฟังก์ชันดึงเมนูอาหาร ---
+  // --- 7. ⭐️ (แก้ไข!) ปุ่ม "แก้ไขสถานะโต๊ะ" (ให้เปลี่ยน Text) ⭐️ ---
+  editTablesButton.addEventListener("click", () => {
+    isEditMode = !isEditMode; // สลับโหมด true/false
+    editTablesButton.classList.toggle("active", isEditMode); // สลับสีปุ่ม
+    tableSelectionContainer.classList.toggle("edit-mode", isEditMode); // สลับคลาสที่ div แม่
+
+    if (isEditMode) {
+      console.log("เข้าสู่โหมดแก้ไขโต๊ะ");
+      editTablesButton.textContent = "เสร็จสิ้น"; // 👈 (แก้ไข!)
+      selectButton.style.display = 'none'; // ซ่อนปุ่ม "เลือก"
+      // ล้างโต๊ะที่กำลังเลือกอยู่ (ถ้ามี)
+      document.querySelectorAll('.table-item.selected').forEach(el => {
+        el.classList.remove('selected');
+      });
+      currentTableId = null;
+      currentTableNumber = null;
+    } else {
+      console.log("ออกจากโหมดแก้ไขโต๊ะ");
+      editTablesButton.textContent = "แก้ไขสถานะโต๊ะ"; // 👈 (แก้ไข!)
+      selectButton.style.display = 'block'; // เอากลับมา
+    }
+  });
+
+  // --- 8. (ใหม่!) ฟังก์ชันสำหรับจัดการแก้ไขโต๊ะ ---
+  function handleTableEdit(docId, tableData) {
+    const newStatus = (tableData.status === "Available") ? "Occupied" : "Available";
+    
+    if (confirm(`โต๊ะที่ ${tableData.number} (สถานะ: ${tableData.status})\n\nคุณต้องการเปลี่ยนสถานะเป็น "${newStatus}" หรือไม่?`)) {
+      db.collection("tables").doc(docId).update({
+        status: newStatus
+      }).catch(err => console.error("Error updating table status:", err));
+    }
+  }
+
+  // --- (ฟังก์ชันที่เหลือคือเวอร์ชันสมบูรณ์) ---
+
+  // --- 9. ฟังก์ชันดึงเมนูอาหาร ---
   function fetchMenuItems() {
     db.collection("menuItems").get()
       .then((querySnapshot) => {
@@ -135,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // --- 8. ⭐️ (แก้ไข) ฟังก์ชันสร้าง UI เมนู 1 ชิ้น ---
+  // --- 10. ฟังก์ชันสร้าง UI เมนู 1 ชิ้น ---
   function createMenuItemElement(docId, itemData) {
     const itemDiv = document.createElement("div");
     itemDiv.className = "menu-item";
@@ -148,86 +188,59 @@ document.addEventListener("DOMContentLoaded", () => {
         <span class="price">฿ ${itemData.price.toFixed(2)}</span>
       </div>
     `;
-
-    // 9. ⭐️ (แก้ไข) เพิ่ม Event Listener ให้เมนู (เมื่อถูกคลิก) ⭐️
     itemDiv.addEventListener("click", () => {
-      // **ส่ง doc.id ไปด้วย**
       openItemModal(itemData, docId);
     });
-
     menuGridContainer.appendChild(itemDiv);
   }
 
-  // --- 10. ⭐️ (แก้ไข) ฟังก์ชันเปิด Modal (เวอร์ชันมีราคาพิเศษ) ⭐️ ---
+  // --- 11. ฟังก์ชันเปิด Modal (เวอร์ชันมีราคาพิเศษ) ---
   function openItemModal(itemData, docId) {
-    // เก็บข้อมูลเมนูที่ถูกเลือก (รวม docId)
     currentSelectedItem = { ...itemData, id: docId }; 
-    
-    // เอาข้อมูลไปใส่ใน Modal
     modalItemName.textContent = itemData.name;
     modalItemImage.src = itemData.imageUrl || '';
-    modalNotes.value = ""; // ล้างค่าเก่า
+    modalNotes.value = "";
     
-    // *** Logic ใหม่สำหรับสลับราคา ***
     if (itemData.specialprice && itemData.specialprice > 0) {
-      // --- (กรณีมี 2 ราคา) ---
-      modalPriceOptions.style.display = "flex"; // 👈 แสดงปุ่ม 2 ปุ่ม
-      modalItemPriceDisplay.style.display = "none"; // 👈 ซ่อนราคาเดียว
-
-      // ตั้งค่าปุ่ม "ธรรมดา"
+      modalPriceOptions.style.display = "flex";
+      modalItemPriceDisplay.style.display = "none";
       modalBtnNormal.textContent = `ธรรมดา ฿${itemData.price.toFixed(2)}`;
       modalBtnNormal.dataset.price = itemData.price;
       modalBtnNormal.dataset.name = "ธรรมดา";
-
-      // ตั้งค่าปุ่ม "พิเศษ"
       modalBtnSpecial.textContent = `พิเศษ ฿${itemData.specialprice.toFixed(2)}`;
       modalBtnSpecial.dataset.price = itemData.specialprice;
       modalBtnSpecial.dataset.name = "พิเศษ";
-
-      // เลือกปุ่ม "ธรรมดา" เป็นค่าเริ่มต้น
       modalBtnNormal.classList.add("selected");
       modalBtnSpecial.classList.remove("selected");
-      
-      // เก็บราคาที่เลือกไว้ใน state
       currentSelectedItem.selectedPrice = itemData.price;
       currentSelectedItem.selectedPriceName = "ธรรมดา";
-
     } else {
-      // --- (กรณีมีราคาเดียว) ---
-      modalPriceOptions.style.display = "none"; // 👈 ซ่อนปุ่ม 2 ปุ่ม
-      modalItemPriceDisplay.style.display = "block"; // 👈 แสดงราคาเดียว
-
-      // ⭐️ (แก้ไข) ตั้งค่าราคา (จาก ID ที่ถูกต้อง) ⭐️
+      modalPriceOptions.style.display = "none";
+      modalItemPriceDisplay.style.display = "block";
       modalItemPriceDisplay.textContent = `฿ ${itemData.price.toFixed(2)}`;
-      
-      // เก็บราคาที่เลือกไว้ใน state
       currentSelectedItem.selectedPrice = itemData.price;
-      currentSelectedItem.selectedPriceName = ""; // ไม่มีชื่อราคา
+      currentSelectedItem.selectedPriceName = "";
     }
-    
-    // แสดง Modal
     itemModal.style.display = "flex";
   }
 
-  // --- 11. ฟังก์ชันปิด Modal ---
+  // --- 12. ฟังก์ชันปิด Modal ---
   function closeItemModal() {
     itemModal.style.display = "none";
     currentSelectedItem = null;
   }
 
-  // --- 12. ⭐️ (แก้ไข) ฟังก์ชันเพิ่มของลงตะกร้า (เวอร์ชันมีราคาพิเศษ) ⭐️ ---
+  // --- 13. ฟังก์ชันเพิ่มของลงตะกร้า (เวอร์ชันมีราคาพิเศษ) ---
   function addItemToCart() {
     const notes = modalNotes.value;
-    
-    // (ใหม่!) สร้างชื่อเมนูแบบเต็ม (เช่น "ข้าวหน้าเป็ด (พิเศษ)")
     const priceName = currentSelectedItem.selectedPriceName 
       ? ` (${currentSelectedItem.selectedPriceName})` 
       : "";
 
     const cartItem = {
-      id: currentSelectedItem.id, // 👈 (ใหม่!) เก็บ ID ของเมนูไว้
-      name: currentSelectedItem.name + priceName, // 👈 (ใหม่!) ใช้ชื่อแบบเต็ม
-      price: currentSelectedItem.selectedPrice, // 👈 (ใหม่!) ใช้ราคาที่เลือก
+      id: currentSelectedItem.id,
+      name: currentSelectedItem.name + priceName,
+      price: currentSelectedItem.selectedPrice,
       notes: notes,
       qty: 1,
       imageUrl: currentSelectedItem.imageUrl || ''
@@ -239,38 +252,34 @@ document.addEventListener("DOMContentLoaded", () => {
     closeItemModal();
   }
 
-  // --- 13. ฟังก์ชันอัปเดตเลขบนไอคอนตะกร้า ---
+  // --- 14. ฟังก์ชันอัปเดตเลขบนไอคอนตะกร้า ---
   function updateCartCount() {
     cartCountEl.textContent = cart.length;
   }
 
-  // --- 14. Event Listeners (ปุ่มใน Modal) ---
+  // --- 15. Event Listeners (ปุ่มใน Modal) ---
   modalCloseButton.addEventListener("click", closeItemModal);
   addToCartButton.addEventListener("click", addItemToCart);
 
-  // --- 15. ⭐️ (ที่ถูกต้อง) Event Listeners สำหรับปุ่มเลือกราคา ⭐️ ---
+  // --- 16. Event Listeners สำหรับปุ่มเลือกราคา ---
   modalBtnNormal.addEventListener("click", () => {
-    // ไฮไลต์ปุ่ม
     modalBtnNormal.classList.add("selected");
     modalBtnSpecial.classList.remove("selected");
-    // อัปเดต State
     currentSelectedItem.selectedPrice = parseFloat(modalBtnNormal.dataset.price);
     currentSelectedItem.selectedPriceName = modalBtnNormal.dataset.name;
     console.log("Price selected:", currentSelectedItem.selectedPriceName);
   });
 
   modalBtnSpecial.addEventListener("click", () => {
-    // ไฮไลต์ปุ่ม
     modalBtnSpecial.classList.add("selected");
     modalBtnNormal.classList.remove("selected");
-    // อัปเดต State
     currentSelectedItem.selectedPrice = parseFloat(modalBtnSpecial.dataset.price);
     currentSelectedItem.selectedPriceName = modalBtnSpecial.dataset.name;
     console.log("Price selected:", currentSelectedItem.selectedPriceName);
   });
 
 
-  // --- 16. Event Listeners (ไอคอนตะกร้า 🛒 และปุ่มย้อนกลับ ❮) ---
+  // --- 17. Event Listeners (ไอคอนตะกร้า 🛒 และปุ่มย้อนกลับ ❮) ---
   cartIcon.addEventListener("click", () => {
     if (cart.length === 0) {
       alert("ตะกร้าว่างเปล่า");
@@ -286,19 +295,21 @@ document.addEventListener("DOMContentLoaded", () => {
     checkoutContainer.style.display = "none";
   });
 
-  // --- 17. ฟังก์ชันสร้างหน้าสรุปยอด (Checkout) ---
+  // --- 18. ฟังก์ชันสร้างหน้าสรุปยอด (มีปุ่มลบ) ---
   function renderCheckoutSummary() {
     checkoutList.innerHTML = "";
     let subtotal = 0;
 
-    cart.forEach(item => {
+    cart.forEach((item, index) => { // (เพิ่ม index)
       const itemDiv = document.createElement("div");
       itemDiv.className = "checkout-item";
       const notesHTML = item.notes 
         ? `<div class="item-notes">รายละเอียด: ${item.notes}</div>` 
         : "";
       
+      // (เพิ่ม HTML ปุ่มลบ)
       itemDiv.innerHTML = `
+        <button class="checkout-remove-btn" data-index="${index}">&times;</button>
         <img src="${item.imageUrl || ''}" alt="${item.name}" class="checkout-item-image">
         <div class="item-name">${item.name} (x${item.qty})</div>
         <div class="item-price">฿ ${item.price.toFixed(2)}</div>
@@ -311,9 +322,17 @@ document.addEventListener("DOMContentLoaded", () => {
     summarySubtotal.textContent = `฿ ${subtotal.toFixed(2)}`;
     summaryTotal.textContent = `฿ ${subtotal.toFixed(2)}`;
     confirmTotalPrice.textContent = `฿ ${subtotal.toFixed(2)}`;
+
+    // (เพิ่มใหม่) เพิ่ม Event Listeners ให้ปุ่มลบ
+    checkoutList.querySelectorAll('.checkout-remove-btn').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const indexToRemove = parseInt(e.currentTarget.dataset.index, 10);
+        removeItemFromCart(indexToRemove);
+      });
+    });
   }
 
-  // --- 18. จัดการการเลือกวิธีชำระเงิน ---
+  // --- 19. จัดการการเลือกวิธีชำระเงิน ---
   paymentOptions.forEach(button => {
     button.addEventListener("click", () => {
       paymentOptions.forEach(btn => btn.classList.remove("selected"));
@@ -323,79 +342,83 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // --- 18. (ใหม่!) ฟังก์ชันยืนยันออเดอร์ (ปุ่มยอดชำระ) ---
+  // --- 20. ฟังก์ชันยืนยันออเดอร์ (ปุ่มยอดชำระ) ---
   confirmOrderButton.addEventListener("click", () => {
-    // ป้องกันการกดซ้ำ
     confirmOrderButton.disabled = true;
     confirmOrderButton.textContent = "กำลังบันทึก...";
 
-    // 1. คำนวณราคารวม
     const finalTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
     
-    // --- ⬇️ (นี่คือส่วนที่แก้ไขทั้งหมด) ⬇️ ---
-
-    // 2. สร้าง 'items' Array ใหม่ ที่มี status ในแต่ละจาน
-    // เราใช้ .map() เพื่อวนลูปทุกชิ้นใน 'cart'
-    const itemsWithStatus = cart.map(item => ({
-        ...item, // คัดลอกข้อมูลเดิม (name, price, notes, imageUrl, qty)
-        status: "Preparing" // ⬅️ **เพิ่ม 'status' เข้าไปใน "จาน"**
+    const orderItems = cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        qty: item.qty,
+        price: item.price,
+        notes: item.notes,
+        status: "Preparing"
     }));
-
-    // 3. สร้าง Object ที่จะส่งไป Firestore (ใน "รูปแบบใหม่")
+    
     const orderObject = {
       tableId: currentTableId,
       tableNumber: currentTableNumber,
-      items: itemsWithStatus, // 👈 ใช้ Array ใหม่ที่มี 'status'
+      items: orderItems,
       totalPrice: finalTotal,
       paymentMethod: selectedPaymentMethod,
-      // status: "Preparing", // ⬅️ **"ห้าม" มี status ระดับบนอีกต่อไป**
-      timestamp: firebase.firestore.FieldValue.serverTimestamp() 
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
     };
-    
-    // --- ⬆️ (จบส่วนที่แก้ไข) ⬆️ ---
 
-
-    // 4. ส่งออเดอร์ (รูปแบบใหม่) ไปที่ Collection "orders"
     db.collection("orders").add(orderObject)
       .then((docRef) => {
-        // 5. (สำเร็จ) อัปเดตสถานะโต๊ะเป็น "Occupied"
         console.log("Order written with ID: ", docRef.id);
-        db.collection("tables").doc(currentTableId).update({
+        return db.collection("tables").doc(currentTableId).update({
           status: "Occupied"
         });
       })
       .then(() => {
-        // 6. (สำเร็จ) แสดงหน้า "สั่งสำเร็จ"
         showSuccessPage();
       })
       .catch((error) => {
-        // 7. (ล้มเหลว)
         console.error("Error adding order: ", error);
         alert("เกิดข้อผิดพลาดในการสั่งอาหาร กรุณาลองใหม่อีกครั้ง");
         confirmOrderButton.disabled = false;
-        confirmOrderButton.textContent = "ยอดชำระ";
+        confirmOrderButton.innerHTML = `ยอดชำระ <span id="confirm-total-price">฿ 0.00</span>`;
       });
   });
 
-  // --- 19. (ใหม่!) ฟังก์ชันแสดงหน้าสั่งสำเร็จ ---
+  // --- 21. ฟังก์ชันแสดงหน้าสั่งสำเร็จ ---
   function showSuccessPage() {
     checkoutContainer.style.display = "none";
     successContainer.style.display = "block";
 
-    // 20. (ใหม่!) รีเซ็ตทุกอย่าง
+    // 22. รีเซ็ตทุกอย่าง
     cart = [];
     currentTableId = null;
     currentTableNumber = null;
-    currentSelectedItem = null; 
+    currentSelectedItem = null;
     updateCartCount();
     confirmOrderButton.disabled = false;
-    confirmOrderButton.innerHTML = `ยอดชำระ <span id="confirm-total-price">฿ 0.00</span>`; // รีเซ็ตปุ่ม
+    confirmOrderButton.innerHTML = `ยอดชำระ <span id="confirm-total-price">฿ 0.00</span>`;
 
-    // กลับไปหน้าเลือกโต๊ะอัตโนมัติใน 3 วินาที
     setTimeout(() => {
       successContainer.style.display = "none";
       tableSelectionContainer.style.display = "block";
     }, 3000);
+  }
+
+  // --- 23. (เพิ่มใหม่!) ฟังก์ชันลบของออกจากตะกร้า ---
+  function removeItemFromCart(index) {
+    if (index > -1 && index < cart.length) {
+      cart.splice(index, 1);
+      console.log('Cart after removal:', cart);
+      
+      renderCheckoutSummary();
+      updateCartCount();
+
+      if (cart.length === 0) {
+        menuContainer.style.display = "block";
+        checkoutContainer.style.display = "none";
+      }
+    }
   }
 
 }); // <-- ปิดวงเล็บของ DOMContentLoaded (ตัวสุดท้าย)

@@ -55,7 +55,6 @@ body {
   transition: all 0.2s;
 }
 
-/* ⭐️ นี่คือส่วนที่คุณต้องแก้ ⭐️ */
 .table-item img {
   width: 60px;  /* 👈 ปรับเลขนี้ได้ตามความพอใจ */
   height: auto; /* 👈 คงสัดส่วน */
@@ -72,21 +71,18 @@ body {
 */
 
 /* สถานะ: ว่าง (Available) - สีดำ */
-.table-item[data-status="Available"] {
-  border-color: #999;
-}
 .table-item[data-status="Available"] img {
   filter: grayscale(0%) opacity(0.8);
 }
 
 /* สถานะ: เต็ม (Occupied) - สีเทา */
 .table-item[data-status="Occupied"] {
-  border-color: #e0e0e0;
-  background-color: #f9f9f9;
+  border-color: #e2e2e2;
+  background-color: #e2e2e2;
   cursor: not-allowed; /* คลิกไม่ได้ */
 }
 .table-item[data-status="Occupied"] img {
-  filter: grayscale(100%) opacity(0.5);
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(328deg) brightness(100%) contrast(0%);
 }
 .table-item[data-status="Occupied"] span {
   color: #999;
@@ -101,7 +97,43 @@ body {
 .table-item.selected img {
   /* ไอคอนสีส้ม (เราจะใช้ filter หมุนสี) */
   /* ถ้ามีรูปไอคอนสีส้ม ก็เปลี่ยน src เอาง่ายกว่า */
-  filter: invert(0%) sepia(50%) saturate(-500%) hue-rotate(328deg) brightness(100%) contrast(60%);
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(328deg) brightness(0%) contrast(50%);
+}
+
+/* --- (ใหม่!) สไตล์ปุ่ม Edit โต๊ะ --- */
+.edit-button {
+  background-color: #f0f0f0;
+  color: #555;
+  margin: 0px 0px 10px 0px;
+  border: 1px solid #ddd;
+}
+.edit-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* ⭐️ (ใหม่!) สไตล์เมื่อปุ่ม Edit "ถูกกด" ⭐️ */
+.edit-button.active {
+  width: 100%;
+  text-decoration:  none;
+  background-color: #f06a4e; /* สีส้มเข้ม */
+  color: white;
+  border-color: #d95336;
+}
+.edit-button.active:hover {
+  background-color: #d95336; /* สีส้มเข้ม */
+  color: white;
+  border-color: #d95336;
+}
+
+/* ⭐️ (ใหม่!) สไตล์เมื่ออยู่ใน "โหมดแก้ไข" ⭐️ */
+/* ทำให้โต๊ะ "ทุกตัว" คลิกได้ (มีนิ้วชี้) */
+.pos-container.edit-mode .table-item {
+  cursor: pointer;
+}
+/* ไฮไลต์โต๊ะที่เต็ม ให้รู้ว่ากำลังจะแก้ */
+.pos-container.edit-mode .table-item[data-status="Occupied"] {
+  border-color: #d95336;
+  border-width: 2px;
 }
 
 /* ปุ่มกด (ใช้ดีไซน์คล้ายๆ ปุ่ม Login) */
@@ -119,6 +151,23 @@ body {
 }
 .pos-button:hover {
   background-color: #d95336;
+}
+.pos-button-edit {
+  width: max-content;
+  padding: 14px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+  text-decoration:  double underline;
+  background-color: transparent; /* สีส้ม */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.pos-button-edit:hover {
+  color: #d95336;
+  background-color: transparent;
 }
 
 /* --- สไตล์ส่วนเมนู --- */
