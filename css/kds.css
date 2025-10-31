@@ -4,10 +4,10 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: #f5f5f5;
     margin: 0;
     padding: 0;
+    font-family: "Pridi", serif;
 }
 
 h2, h3, p {
@@ -36,6 +36,7 @@ h2, h3, p {
     gap: 16px;
     padding: 20px;
     background-color: #ffffff;
+    font-family: "Pridi", serif;
 }
 
 .navigation .nav-button {
@@ -48,6 +49,7 @@ h2, h3, p {
     cursor: pointer;
     transition: all 0.3s ease;
     color: #666;
+    font-family: "Pridi", serif;
 }
 
 .navigation .nav-button.active {

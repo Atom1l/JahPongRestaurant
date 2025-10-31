@@ -1,63 +1,89 @@
-/* --- ใช้กับทุกหน้า --- */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; /* ทำให้เต็มจอ */
-  margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #FFFFFF; /* สีพื้นหลังอ่อนๆ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    flex-direction: column; /* เพื่อจัด "เข้าสู่ระบบ" ให้อยู่ด้านบน */
 }
 
-/* --- ดีไซน์สำหรับหน้า Login --- */
 .login-container {
-  background: #ffffff;
-  padding: 2rem 2.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  width: 350px;
-  text-align: center;
+    background-color: none; /* ไม่ต้องมี */
+    padding: 0; /* ไม่ต้องมี */
+    border-radius: 8px; /* ไม่ต้องมี */
+    box-shadow: none; /* ไม่ต้องมี */
+    width: 100%; /* ให้เต็มความกว้าง */
+    max-width: 400px; /* จำกัดความกว้างสูงสุด */
+    text-align: center;
 }
 
-.login-container h2 {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 2rem;
+h2 {
+    color: #333;
+    margin-bottom: 40px; /* เพิ่มระยะห่างด้านล่าง */
+    font-size: 2.2em; /* ทำให้ใหญ่ขึ้น */
+    font-weight: bold;
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* ระยะห่างระหว่าง input groups */
+    padding: 0 20px; /* เพิ่ม padding ด้านข้างให้ form เพื่อไม่ให้ input ชิดขอบ */
+}
+
+/* ⭐️ (ใหม่!) สไตล์สำหรับกลุ่ม Input และ Icon ⭐️ */
 .input-group {
-  margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    border: 2px solid #ddd; /* ขอบ input */
+    border-radius: 30px; /* ทำให้โค้งมนมาก */
+    padding: 10px 20px; /* padding ภายใน group */
+    background-color: white; /* สีพื้นหลัง input group */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* เพิ่มเงาอ่อนๆ */
 }
 
-.input-group input {
-  width: 100%;
-  padding: 12px 15px;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-sizing: border-box; /* ป้องกันไม่ให้ input ล้นกรอบ */
+.input-icon {
+    width: 24px; /* ขนาดของไอคอน */
+    height: 24px;
+    margin-right: 15px; /* ระยะห่างระหว่างไอคอนกับ input */
+    opacity: 0.6; /* ทำให้ไอคอนดูจางลงเล็กน้อย */
 }
 
-#login-button {
-  width: 100%;
-  padding: 14px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: white;
-  background-color: #f06a4e; /* สีส้มตาม Mockup */
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s;
+.input-group input[type="email"],
+.input-group input[type="password"] {
+    flex-grow: 1; /* ให้ input ขยายเต็มพื้นที่ที่เหลือ */
+    border: none; /* ลบขอบ input ดั้งเดิม */
+    padding: 5px 0; /* padding ภายใน input */
+    font-size: 1.1em;
+    outline: none; /* ลบเส้นกรอบเวลา focus */
+    color: #333;
+    background: transparent; /* ทำให้พื้นหลัง input โปร่งใส */
+    font-family: 'Pridi', sans-serif;
 }
 
-#login-button:hover {
-  background-color: #d95336; /* สีส้มเข้มขึ้นตอนเอาเมาส์ชี้ */
+/* ⭐️ (ใหม่!) Placeholder style ⭐️ */
+.input-group input::placeholder {
+    color: #a0a0a0; /* สี placeholder */
+    font-weight: normal;
 }
 
-/* คลาสสำหรับแสดงข้อความ Error */
-.error-message {
-  color: red;
-  font-size: 0.9rem;
-  margin-top: 1rem;
+/* ⭐️ สไตล์ปุ่ม "เข้าสู่ระบบ" ⭐️ */
+.login-button {
+    background-color: #f06a4b; /* สีปุ่มใหม่ (ส้ม) */
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 30px; /* ทำให้โค้งมนมาก */
+    cursor: pointer;
+    font-size: 1.3em; /* ขนาดตัวอักษรใหญ่ขึ้น */
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 30px; /* เพิ่มระยะห่างด้านบน */
+    box-shadow: 0 4px 10px rgba(240, 106, 75, 0.3); /* เงาปุ่ม */
+}
+
+.login-button:hover {
+    background-color: #e65230; /* สีเข้มขึ้นเมื่อ hover */
 }

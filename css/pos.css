@@ -3,12 +3,50 @@ body {
   background-color: #ffffff; /* หน้า POS ใช้พื้นหลังขาว */
 }
 
+/* --- Header --- */
+.pos-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* 3 คอลัมน์: [ซ้าย] [กลาง] [ขวา] */
+    align-items: center;
+    padding: 5px 15px; /* เพิ่ม padding ซ้ายขวา */
+    background-color: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: -40px;
+    height: 75px; /* ⭐️ เพิ่มความสูงคงที่ */
+    box-sizing: border-box;
+}
+
+.logo-container {
+    grid-column: 2 / 3; /* ⭐️ สั่งให้โลโก้อยู่คอลัมน์กลาง */
+    text-align: center;
+}
+.logo-container .logo {
+    height: 50px;
+    width: auto;
+    margin-bottom: 10; /* ⭐️ ลบ margin-bottom เก่าทิ้ง */
+}
+
+.pos-header .back-button {
+  grid-column: 1 / 2; /* ⭐️ อยู่คอลัมน์ซ้าย */
+  justify-self: start; /* ⭐️ ชิดซ้าย */
+  font-size: 2.2rem; /* ⭐️ ทำให้ใหญ่ขึ้น */
+  padding: 0 10px;
+}
+
+/* ⭐️ (ใหม่!) จัดสไตล์ "ตะกร้า" ที่อยู่ใน Header */
+.pos-header #cart-icon {
+  grid-column: 3 / 4; /* ⭐️ อยู่คอลัมน์ขวา */
+  justify-self: end; /* ⭐️ ชิดขวา */
+  margin-top: 0; /* ⭐️ ลบ margin-top เก่าทิ้ง */
+}
+
 .pos-container {
   width: 90%;
   max-width: 400px; /* จำกัดความกว้างสำหรับมือถือ */
   margin: 1rem auto;
   padding: 1rem;
   text-align: center;
+  font-family: 'Pridi', sans-serif;
 }
 
 .pos-container h2 {
@@ -35,7 +73,7 @@ body {
   vertical-align: middle;
 }
 .dot.selected { background-color: #f06a4e; border: 1px solid #f06a4e; }
-.dot.available { background-color: #000000; border: 1px solid #000000; }
+.dot.available { background-color: #686868; border: 1px solid #686868; }
 .dot.occupied { background-color: #e0e0e0; border: 1px solid #ccc; }
 
 
@@ -104,7 +142,7 @@ body {
 .edit-button {
   background-color: #f0f0f0;
   color: #555;
-  margin: 0px 0px 10px 0px;
+  margin: -20px 0px 10px 0px;
   border: 1px solid #ddd;
 }
 .edit-button:hover {
@@ -148,6 +186,8 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-family: 'Pridi', sans-serif;
+  letter-spacing: 0.7px;
 }
 .pos-button:hover {
   background-color: #d95336;
@@ -210,7 +250,7 @@ body {
 /* ตารางเมนู */
 .menu-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* 2 คอลัมน์ */
+  grid-template-columns: 1fr 1fr 1fr; /* 3 คอลัมน์ */
   gap: 1rem;
 }
 
@@ -221,6 +261,10 @@ body {
   cursor: pointer;
   transition: box-shadow 0.2s;
   background-color: #fdfdfd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-item:hover {
@@ -235,12 +279,17 @@ body {
 
 .menu-item-details {
   padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .menu-item-details h4 {
   font-size: 1rem;
   margin: 0 0 0.25rem 0;
   color: #333;
+  text-wrap: nowrap;
 }
 
 .menu-item-details .price {
@@ -262,6 +311,12 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  font-family: 'Pridi', sans-serif;
+}
+
+#modal-item-name{
+  letter-spacing: 0.5px;
+  font-weight: 600 !important;
 }
 
 .modal-content {
@@ -327,6 +382,7 @@ body {
   box-sizing: border-box;
   margin-top: 0.5rem;
   margin-bottom: 1rem;
+  font-family: 'Pridi', sans-serif;
 }
 
 .modal-actions {
@@ -336,13 +392,17 @@ body {
 #modal-price-options {
   display: flex; /* วางปุ่มข้างกัน */
   gap: 10px; /* เว้นช่องไฟ */
+  font-family: 'Pridi', sans-serif;
 }
 
 #modal-price-options .price-option {
   width: 50%; /* แบ่งครึ่งจอ */
   text-align: center;
   font-size: 1rem;
+  font-weight: 600;
   padding: 12px 5px; /* ปรับ padding ให้พอดี */
+  font-family: 'Pridi', sans-serif;
+  letter-spacing: 0.70px;
 }
 
 /* --- สไตล์หน้า Checkout --- */
@@ -366,68 +426,76 @@ body {
   padding: 5px 10px;
 }
 
-#checkout-list {
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
-  padding: 1rem 0;
-  margin-bottom: 1rem;
-}
+/* --- (ใหม่!) CSS สำหรับ Checkout Item --- */
 
 .checkout-item {
-  display: grid;
-  grid-template-columns: 1fr auto; /* ชื่ออยู่ซ้าย ราคาอยู่ขวา */
-  grid-template-rows: auto auto; /* 2 แถว */
+  display: flex;
+  align-items: start; /* ⭐️ จัดทุกอย่างให้อยู่เริ่มต้นแนวตั้ง */
   margin-bottom: 1rem;
   padding-bottom: 1rem;
   border-bottom: 1px dashed #eee;
 }
-.checkout-item-image {
-  /* ⭐️ กำหนดขนาดตรงนี้ ⭐️ */
-  width: 50px;
-  height: 50px;
-  
-  /* (ดีไซน์เพิ่มเติม) */
-  border-radius: 8px;     /* ทำให้มุมมน */
-  object-fit: cover;      /* ป้องกันรูปบิดเบี้ยว */
 
-  /* (ส่วนจัดวาง Grid) */
-  grid-column: 1 / 2;
-  grid-row: 1 / 3; /* ให้รูปสูง 2 แถว */
-}
 .checkout-item:last-child {
   margin-bottom: 0;
   padding-bottom: 0;
   border-bottom: none;
 }
 
+/* (สไตล์ปุ่มลบและรูปภาพ - ใช้ของเดิมได้) */
+.checkout-remove-btn{
+  width: max-content;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  margin-left: -10px;
+  margin-right: 5px;
+  filter: opacity(0.7);
+
+  align-self: center;
+}
+
+.checkout-item-image {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 15px; /* ⭐️ เพิ่มระยะห่างขวา */
+}
+
+/* (ใหม่!) Div ที่ครอบข้อความ */
+.item-info {
+  flex-grow: 1; /* ⭐️ ดันให้ขยายเต็มพื้นที่ตรงกลาง */
+  text-align: left;
+  display: flex;
+  flex-direction: column; /* ⭐️ จัดให้ชื่อและรายละเอียดอยู่บน/ล่าง */
+}
+
 .checkout-item .item-name {
   font-size: 1.1rem;
   font-weight: 500;
-  grid-column: 1 / 2;
-  grid-row: 1 / 2;
-  width: 80%;
-  margin-left: 60px;
-  text-align: left;
+  color: #333;
 }
-.checkout-item .item-price {
-  font-size: 1.1rem;
-  font-weight: 500;
-  grid-column: 2 / 3;
-  grid-row: 1 / 2;
-  text-align: right;
-}
+
 .checkout-item .item-notes {
   font-size: 0.9rem;
   color: #777;
-  grid-column: 1 / 3; /* กินพื้นที่เต็มแถว */
-  grid-row: 2 / 3;
-  width: 80%;
-  margin-left: 60px;
-  text-align: left;
+
 }
+
+.checkout-item .item-price {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: right;
+  margin-left: 10px; /* ⭐️ เพิ่มระยะห่างซ้าย */
+  white-space: nowrap;
+}
+
 
 /* สรุปยอด */
 .checkout-summary {
+  margin-top: 1.5rem;
   margin-bottom: 1.5rem;
 }
 .summary-row {
@@ -449,6 +517,8 @@ body {
 .payment-methods h3 {
   font-size: 1.1rem;
   margin-bottom: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.6px;
 }
 .payment-option {
   width: 100%;
@@ -460,9 +530,17 @@ body {
   border-radius: 8px;
   margin-bottom: 0.5rem;
   cursor: pointer;
+
+  display: flex;
+  align-items: center;
+
+  font-family: 'Pridi', sans-serif;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px;
 }
 .payment-option .payment-icon {
   font-size: 1.2rem;
+  margin-top: 7px;
   margin-right: 10px;
 }
 .payment-option.selected {

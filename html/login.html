@@ -5,23 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ร้านข้าวหน้าเป็ดจ่าพงศ์ - เข้าสู่ระบบ</title>
   <link rel="stylesheet" href="/css/login.css">
+  <link rel="stylesheet" href="/css/font.css">
+
+  <link rel="icon" type="image/png" href="/images/logo.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pridi:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
 
     <div class="login-container">
     
-        <h2>เข้าสู่ระบบ</h2>
+        <h2 class="pridi-bold">เข้าสู่ระบบ</h2>
         
         <form id="login-form">
-            <div class="input-group">
-                <input type="email" id="login-email" placeholder="Jahpong@KohNganBrunch1" required>
-            </div>
-            
-            <div class="input-group">
-                <input type="password" id="login-password" placeholder="************" required>
-            </div>
-            
-            <button type="submit" id="login-button">เข้าสู่ระบบ</button>
+          <div class="input-group">
+              <img src="../images/People.png" alt="User Icon" class="input-icon"> <input type="email" id="login-email" placeholder="Jahpong@Restuarant1" required> 
+          </div>
+
+          <div class="input-group">
+              <img src="../images/Keys.png" alt="Key Icon" class="input-icon"> <input type="password" id="login-password" placeholder="************" required> 
+          </div>
+          
+          <button type="submit" class="login-button pridi-semibold">เข้าสู่ระบบ</button>
         </form>
         
         <p id="login-error" class="error-message"></p>

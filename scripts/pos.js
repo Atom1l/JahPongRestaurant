@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     tableDiv.innerHTML = `
       <img src="${iconUrl}" alt="โต๊ะ">
-      <div style="font-weight:bold;">โต๊ะที่ ${tableData.number}</div>
+      <div style="">โต๊ะที่ ${tableData.number}</div>
       <input type="radio" name="table_selection" value="${docId}" style="display: none;">
     `;
 
@@ -119,6 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (currentTableId) {
       tableSelectionContainer.style.display = "none";
       menuContainer.style.display = "block";
+
+      cartIcon.style.display = "block";
+      checkoutBackButton.style.display = "block";
+
       fetchMenuItems(); 
     } else {
       alert("กรุณาเลือกโต๊ะก่อนครับ");
@@ -287,12 +291,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     menuContainer.style.display = "none";
     checkoutContainer.style.display = "block";
+
+    cartIcon.style.display = "none"; // ⭐️ (เพิ่ม!) ซ่อนตะกร้า
+    checkoutBackButton.style.display = "block"; // ⭐️ (เพิ่ม!) โชว์ปุ่มย้อนกลับ
+
     renderCheckoutSummary();
   });
 
+  // --- (อัปเกรด!) Logic ปุ่มย้อนกลับ (❮) ---
   checkoutBackButton.addEventListener("click", () => {
-    menuContainer.style.display = "block";
-    checkoutContainer.style.display = "none";
+
+    // 1. เช็คว่าเราอยู่หน้า "เช็คเอาท์" หรือไม่?
+    if (checkoutContainer.style.display === "block") {
+      // (ใช่) -> ให้กลับไปหน้า "เมนู"
+      menuContainer.style.display = "block";
+      checkoutContainer.style.display = "none";
+      
+      cartIcon.style.display = "block"; // โชว์ตะกร้า
+      checkoutBackButton.style.display = "block"; // ปุ่มย้อนกลับยังอยู่
+    
+    } 
+    // 2. ถ้าไม่อยู่หน้าเช็คเอาท์ (แสดงว่าอยู่หน้า "เมนู")
+    else if (menuContainer.style.display === "block") {
+      // (ใช่) -> ให้กลับไปหน้า "เลือกโต๊ะ"
+      tableSelectionContainer.style.display = "block";
+      menuContainer.style.display = "none";
+      
+      cartIcon.style.display = "none"; // ซ่อนตะกร้า
+      checkoutBackButton.style.display = "none"; // ซ่อนปุ่มย้อนกลับ
+    }
   });
 
   // --- 18. ฟังก์ชันสร้างหน้าสรุปยอด (มีปุ่มลบ) ---
@@ -309,11 +336,17 @@ document.addEventListener("DOMContentLoaded", () => {
       
       // (เพิ่ม HTML ปุ่มลบ)
       itemDiv.innerHTML = `
-        <button class="checkout-remove-btn" data-index="${index}">&times;</button>
+        <button class="checkout-remove-btn" data-index="${index}"><img style="
+        width:32px; height:32px;" src="../images/crosses.png" alt="Remove"/></button>
+        
         <img src="${item.imageUrl || ''}" alt="${item.name}" class="checkout-item-image">
-        <div class="item-name">${item.name} (x${item.qty})</div>
+        
+        <div class="item-info">
+          <div class="item-name">${item.name} (x${item.qty})</div>
+          ${notesHTML}
+        </div>
+        
         <div class="item-price">฿ ${item.price.toFixed(2)}</div>
-        ${notesHTML}
       `;
       checkoutList.appendChild(itemDiv);
       subtotal += (item.price * item.qty);
@@ -390,6 +423,8 @@ document.addEventListener("DOMContentLoaded", () => {
     checkoutContainer.style.display = "none";
     successContainer.style.display = "block";
 
+    checkoutBackButton.style.display = "none";
+
     // 22. รีเซ็ตทุกอย่าง
     cart = [];
     currentTableId = null;
@@ -417,6 +452,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (cart.length === 0) {
         menuContainer.style.display = "block";
         checkoutContainer.style.display = "none";
+
+        // ⭐️ (เพิ่ม!) สั่งให้ตะกร้ากลับมาโชว์ ⭐️
+        cartIcon.style.display = "block"; 
+        
+        // ⭐️ (เพิ่ม!) และปุ่มย้อนกลับก็ยังต้องโชว์ (เพราะเราอยู่หน้าเมนู) ⭐️
+        checkoutBackButton.style.display = "block";
       }
     }
   }
