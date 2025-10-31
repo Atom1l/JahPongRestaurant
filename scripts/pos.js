@@ -388,7 +388,8 @@ document.addEventListener("DOMContentLoaded", () => {
         qty: item.qty,
         price: item.price,
         notes: item.notes,
-        status: "Preparing"
+        status: "Preparing",
+        imageUrl: item.imageUrl || ''
     }));
     
     const orderObject = {
@@ -421,7 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- 21. ฟังก์ชันแสดงหน้าสั่งสำเร็จ ---
   function showSuccessPage() {
     checkoutContainer.style.display = "none";
-    successContainer.style.display = "block";
+    successContainer.style.display = "flex";
 
     checkoutBackButton.style.display = "none";
 

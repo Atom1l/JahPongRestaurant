@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ร้านข้าวหน้าเป็ดจ่าพงศ์ - Dashboard</title>
+    <link rel="icon" type="image/png" href="/images/logo.jpg">
+    
+    <link rel="stylesheet" href="../css/pos.css"> 
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/dashboard.css"> <link rel="stylesheet" href="/css/font.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pridi:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="pos-header">
+        <div class="logo-container">
+            <img src="../images/logo.jpg" alt="Jahpong Logo" class="logo">
+        </div>
+        </header>
+
+    <main class="dashboard-container">
+
+        <section class="sales-summary-container">
+            <h2>ยอดขายทั้งหมด</h2>
+            <div class="sales-cards">
+                <div class="sales-card">
+                    <h3 id="sales-daily">฿ 0</h3>
+                    <p>รายวัน</p>
+                </div>
+                <div class="sales-card">
+                    <h3 id="sales-weekly">฿ 0</h3>
+                    <p>รายอาทิตย์</p>
+                </div>
+                <div class="sales-card">
+                    <h3 id="sales-monthly">฿ 0</h3>
+                    <p>รายเดือน</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="top-items-container">
+            <h2>สินค้าขายดีประจำสัปดาห์</h2>
+            <ol id="top-items-list" class="top-items-grid"></ol>
+        </section>
+
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // (Config ของคุณ)
+        const firebaseConfig = {
+            apiKey: "AIzaSyD1SI_Y7R6e7pBlM_2gGSBp0fkeem3aSpI",
+            authDomain: "jahpongrestaurant.firebaseapp.com",
+            projectId: "jahpongrestaurant",
+            storageBucket: "jahpongrestaurant.firebasestorage.app",
+            messagingSenderId: "97238013021",
+            appId: "1:97238013021:web:6f613131285f7b6532e9b4",
+            measurementId: "G-TKG07DGYD9"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
+    
+    <script src="../scripts/dashboard.js"></script> 
+</body>
+</html>

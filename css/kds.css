@@ -19,7 +19,7 @@ h2, h3, p {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 15px 0px 10px 0px;
     background-color: #ffffff;
     border-bottom: 1px solid #e0e0e0;
 }
@@ -27,6 +27,7 @@ h2, h3, p {
 .logo-container .logo {
     height: 50px;
     width: auto;
+    margin: 3px 14px 0px 0px;
 }
 
 /* --- Navigation (แยกลงมาใต้ header) --- */
@@ -282,5 +283,91 @@ h2, h3, p {
     .done-button {
         padding: 10px 24px;
         font-size: 0.95rem;
+    }
+}
+
+/* --- (ใหม่!) Responsive สำหรับจอมือถือ (เล็กกว่า 600px) --- */
+@media (max-width: 600px) {
+
+    /* 1. ปรับปุ่ม Navigation ให้เรียงกันแนวตั้ง */
+    .navigation {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+
+    .navigation .nav-button {
+        width: 100%; /* ทำให้ปุ่มเต็มความกว้าง */
+        padding: 14px;
+        font-size: 1.2rem;
+    }
+
+    /* 2. ปรับ Container หลัก */
+    .kds-container {
+        padding: 15px 10px; /* ลดระยะห่างขอบ */
+    }
+
+    .kds-page h2 {
+        font-size: 1.5rem; /* ลดขนาด H2 */
+        margin-bottom: 20px;
+        text-align: center;
+        padding-left: 0;
+    }
+
+    /* 3. ⭐️ (สำคัญ!) ปรับ Order Card ให้เรียงแนวตั้ง ⭐️ */
+    .order-card {
+        flex-direction: column; /* 👈 สั่งให้ของข้างในเรียงแนวตั้ง */
+        align-items: stretch; /* 👈 ยืดให้ทุกส่วนเต็มความกว้าง */
+        padding: 20px;
+    }
+
+    /* 4. ปรับรูปภาพให้เต็มความกว้าง */
+    .order-image {
+        width: 100%;
+        height: 180px; /* 👈 กำหนดความสูงคงที่ (ปรับได้) */
+        object-fit: cover;
+        margin-right: 0;
+        margin-bottom: 20px; /* 👈 เว้นระยะห่างจากรายละเอียด */
+    }
+
+    /* 5. ปรับรายละเอียด (จัดกลาง) */
+    .order-details {
+        text-align: center;
+        gap: 10px;
+    }
+
+    .order-details h3 {
+        font-size: 1.4rem;
+    }
+
+    .order-details p {
+        font-size: 1rem;
+    }
+
+    /* 6. ปรับส่วนปุ่ม (ให้เต็มความกว้าง) */
+    .order-action {
+        flex-direction: column;
+        align-items: stretch; /* 👈 ยืดให้เต็มความกว้าง */
+        margin-left: 0;
+        margin-top: 20px; /* 👈 เว้นระยะห่างจากรายละเอียด */
+        gap: 12px;
+    }
+
+    .order-action .price {
+        font-size: 1.6rem;
+        text-align: center; /* 👈 จัดราคากลาง */
+    }
+
+    .finish-button,
+    .done-button {
+        width: 100%; /* 👈 ปุ่มเต็มความกว้าง (กดง่าย) */
+        padding: 14px;
+        font-size: 1.1rem;
+    }
+
+    /* 7. ปรับ Modal เล็กน้อย */
+    .modal-content {
+        padding: 25px 20px;
+        width: 95%;
     }
 }

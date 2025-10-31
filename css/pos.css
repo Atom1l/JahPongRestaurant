@@ -81,7 +81,7 @@ body {
 .table-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: 1.25rem;
   margin-bottom: 2rem;
 }
 
@@ -214,9 +214,13 @@ body {
 
 .menu-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 1rem;
+}
+
+.menu-header h2 {
+  margin-bottom: 0;
 }
 
 #cart-icon {
@@ -407,12 +411,11 @@ body {
 
 /* --- สไตล์หน้า Checkout --- */
 .checkout-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin-top: 20px;
   margin-bottom: 1.5rem;
 }
 .checkout-header h2 {
+  text-align: center;
   margin: 0;
 }
 
@@ -557,11 +560,18 @@ body {
   margin-top: 1rem;
 }
 
-/* --- สไตล์หน้า Success --- */
-#success-container {
+/* --- สไตล์สำหรับกล่อง Success --- */
+.success-box {
+  background-color: white;
+  padding: 3rem 2.5rem; /* เพิ่ม padding ให้โปร่งขึ้น */
+  border-radius: 16px;
   text-align: center;
-  padding-top: 4rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 380px;
 }
+
+/* (CSS ของ .success-icon และ h2 ของเดิมยังใช้ได้) */
 .success-icon {
   width: 100px;
   height: 100px;
